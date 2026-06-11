@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>blume* | For Nanny</title>
+  <!-- SEO & Icons -->
+  <meta name="description" content="A fresh digital journal. For Nanny.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%235A8F76%22/></svg>">
+  
+  <!-- Fonts (Fredoka & Space Grotesk matching the 'blume' style) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pinyon+Script&family=Space+Grotesk:wght@400;500;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Intro Welcome Overlay (Autoplay bypass) -->
+  <div class="intro-overlay" id="introOverlay">
+    <div class="intro-card">
+      <div class="intro-card-inner">
+        <h1 class="intro-title">for nanny*</h1>
+        <p class="intro-subtitle">gardens of memory</p>
+        <div class="intro-divider"></div>
+        <button class="intro-btn" id="enterBtn">open journal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Heart Canvas (Subtle green/rose hearts) -->
+  <canvas id="heartCanvas"></canvas>
+
+  <!-- Ambient Audio Player (Retro Tape Deck) -->
+  <div class="audio-container">
+    <div class="cassette-player" id="cassettePlayer">
+      <div class="tape-wheel wheel-left" id="wheelLeft"></div>
+      <div class="tape-wheel wheel-right" id="wheelRight"></div>
+    </div>
+    <div class="audio-controls">
+      <button class="audio-btn" id="playPauseBtn" aria-label="Play Music">
+        <svg id="playIcon" viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        <svg id="pauseIcon" class="hidden" viewBox="0 0 24 24" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/></svg>
+      </button>
+      <span class="audio-title">Muban Nanthawan Soi 4-3.m4a</span>
+    </div>
+    <audio id="bgMusic" loop src="assets/bg_sound.m4a"></audio>
+  </div>
+
+  <main class="app-container">
+
+    <!-- Card 1: The Couple Portrait -->
+    <div class="blume-card card-portrait">
+      <div class="card-header-tag">@onfr0y & @nanny</div>
+      
+      <div class="portrait-slider-container">
+        <!-- Grayscale slideshow -->
+        <img src="assets/photo1.jpg" alt="Memory 1" class="slider-img active">
+        <img src="assets/photo2.jpg" alt="Memory 2" class="slider-img">
+        <img src="assets/photo3.jpg" alt="Memory 3" class="slider-img">
+        <img src="assets/photo4.jpg" alt="Memory 4" class="slider-img">
+        <img src="assets/photo5.jpg" alt="Memory 5" class="slider-img">
+        
+        <!-- Overlay tags -->
+        <div class="photo-overlay-tag tag-left">kawtang</div>
+        <div class="photo-overlay-tag tag-right">nanny</div>
+      </div>
+      
+      <!-- Dots for slideshow navigation -->
+      <div class="slider-dots">
+        <span class="dot active" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+        <span class="dot" data-index="2"></span>
+        <span class="dot" data-index="3"></span>
+        <span class="dot" data-index="4"></span>
+      </div>
+    </div>
+
+    <!-- Card 2: The Calligraphy Card (Wavy Cloud Art Style) -->
+    <div class="blume-card card-calligraphy cloud-shape">
+      <div class="calligraphy-text-wrapper">
+        <h2 class="calligraphy-title">รักแนนนี่ที่สุดนะ*</h2>
+        <p class="calligraphy-sub">je suis amoureux</p>
+      </div>
+    </div>
+
+    <!-- Card 3: The Rings & Quotes Card -->
+    <div class="blume-card card-rings">
+      <!-- Typewriter quote top right -->
+      <div class="typewriter-quote quote-top-right">
+        "Soyons heureux<br>ensemble."
+      </div>
+      
+      <div class="rings-image-container">
+        <!-- Intertwined charcoal rings graphic -->
+        <img src="assets/rings.png" alt="Intertwined rings sketch" class="rings-img">
+      </div>
+      
+      <!-- Typewriter quote bottom left -->
+      <div class="typewriter-quote quote-bottom-left">
+        "Je jure de toujours<br>t'aimer de toutes<br>les manières possibles."
+      </div>
+    </div>
+
+    <!-- Card 4: Declaration of Love (Blume Style) -->
+    <div class="blume-card card-love">
+      <div class="love-header">
+        <h3 class="love-title">declaration of love*</h3>
+        <p class="love-subtitle">คลิกบอกรักเพื่อเติมความหวานและฟังเพลงของเราสองคนค่ะ</p>
+      </div>
+      <div class="love-action-container">
+        <button class="love-btn-main" id="btnRakNongNanny">
+          รักน้องเเนน
+        </button>
+      </div>
+    </div>
+
+    <!-- Relationship Age Timer -->
+    <div class="blume-card card-timer">
+      <div class="timer-title-meta">TIMELINE COUNTUP</div>
+      <div class="timer-count-display" id="timerDisplay">
+        <div class="timer-block">
+          <span class="val" id="days">00</span>
+          <span class="lbl">DAYS</span>
+        </div>
+        <span class="sep">:</span>
+        <div class="timer-block">
+          <span class="val" id="hours">00</span>
+          <span class="lbl">HOURS</span>
+        </div>
+        <span class="sep">:</span>
+        <div class="timer-block">
+          <span class="val" id="minutes">00</span>
+          <span class="lbl">MINUTES</span>
+        </div>
+        <span class="sep">:</span>
+        <div class="timer-block">
+          <span class="val" id="seconds">00</span>
+          <span class="lbl">SECONDS</span>
+        </div>
+      </div>
+      
+      <div class="timer-footer">
+        <button class="vintage-timer-btn" id="editDateBtn">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          แก้ไขวันครบรอบ
+        </button>
+        <div class="timer-date-input-group hidden" id="datePickerContainer">
+          <input type="date" id="startDateInput" class="v-date-input">
+          <button class="v-save-btn" id="saveDateBtn">SAVE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="vintage-footer">
+      <p>MADE WITH LOVE BY KAW TANG FOR NANNY*</p>
+      <p class="copy">COPYRIGHT &copy; NOTONFR0Y 2026. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+  </main>
+
+  <!-- Floating Love Text Overlay Container -->
+  <div id="loveTextContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

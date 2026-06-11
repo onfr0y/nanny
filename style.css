@@ -1,0 +1,1192 @@
+/* ==========================================
+   Blume Playful-Natural Design System
+   ========================================== */
+:root {
+  --bg-dark-charcoal: #1C1A17; /* Solid near-black from reference */
+  --bg-paper: #FFFFFF;         /* Clean white card backgrounds */
+  --bg-page-overlay: rgba(250, 248, 242, 0.35); /* Soft warm cream tint */
+  --text-primary: #1C1A17;     /* Solid charcoal for high contrast readability */
+  --text-muted: #6B655F;       /* Mid-tone brown-grey for small labels */
+  --accent-green: #5A8F76;     /* Natural leafy green */
+  --accent-rose: #D48C8C;      /* Muted soft rose */
+  --border-color: #1C1A17;     /* Thick black solid borders */
+  --font-heading: 'Fredoka', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-letter: 'Pinyon Script', cursive;
+  --font-sans: 'Space Grotesk', sans-serif;
+  --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --shadow-flat: 4px 4px 0px #1C1A17;
+  --shadow-hover: 6px 6px 0px #1C1A17;
+  --shadow-soft: 0 10px 30px rgba(28, 26, 23, 0.05);
+}
+
+/* Reset and Core Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  /* Natural train view window blended with warm cream tint */
+  background-image: linear-gradient(var(--bg-page-overlay), var(--bg-page-overlay)), url('assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  line-height: 1.5;
+  position: relative;
+  min-height: 100vh;
+  padding: 30px 10px;
+}
+
+/* heartCanvas - Floating subtle green and rose hearts */
+#heartCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Blume Cassette Audio Player Container */
+.audio-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  background-color: var(--bg-paper);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(28, 26, 23, 0.1);
+}
+
+.cassette-player {
+  position: relative;
+  width: 38px;
+  height: 24px;
+  background-color: #FAF8F2;
+  border-radius: 4px;
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  overflow: hidden;
+}
+
+.cassette-player::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  right: 6px;
+  height: 3px;
+  background-color: #FFFFFF;
+  opacity: 0.8;
+  border-radius: 1px;
+}
+
+.tape-wheel {
+  width: 8px;
+  height: 8px;
+  border: 2.5px dashed var(--border-color);
+  border-radius: 50%;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-play-state: paused;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.playing .tape-wheel {
+  animation-name: spin;
+  animation-play-state: running;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.audio-btn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FAF8F2;
+  border: 1.5px solid var(--border-color);
+  transition: var(--transition-smooth);
+}
+
+.audio-btn:hover {
+  background-color: var(--bg-dark-charcoal);
+  color: #FFFFFF;
+}
+
+.audio-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(28, 26, 23, 0.2);
+}
+
+.audio-title {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   Main App Container
+   ========================================== */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 440px; /* Aligned portrait stack */
+  margin: 0 auto;
+  padding: 10px 0 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ==========================================
+   Blume Card Template Style (Playful Rounded)
+   ========================================== */
+.blume-card {
+  position: relative;
+  background-color: var(--bg-paper);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+  padding: 24px;
+  border-radius: 28px; /* Playful organic rounding */
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+/* Subtle Film / Paper Grain Overlay */
+.blume-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 10;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Card Reveal Entry Keyframes */
+.blume-card {
+  view-timeline: --card-tl block;
+  animation: card-reveal auto linear both;
+  animation-timeline: --card-tl;
+  animation-range: entry 5% entry 55%;
+}
+
+@keyframes card-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hover effect on cards */
+.blume-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(28, 26, 23, 0.08);
+}
+
+/* ==========================================
+   Card 1: Portrait/Photo Card
+   ========================================== */
+.card-portrait {
+  padding: 16px;
+}
+
+.card-header-tag {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.portrait-slider-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: #000000;
+  overflow: hidden;
+  border-radius: 18px; /* Rounded images */
+  border: 1.5px solid var(--border-color);
+}
+
+.slider-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  filter: grayscale(1) contrast(1.1) brightness(0.95);
+}
+
+.slider-img.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Custom Overlaid Tags - Styled like black pill buttons */
+.photo-overlay-tag {
+  position: absolute;
+  z-index: 5;
+  background-color: var(--bg-dark-charcoal);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 30px;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tag-left {
+  top: 20%;
+  left: 12px;
+}
+
+.tag-right {
+  bottom: 20%;
+  right: 12px;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #E2DBD2;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.dot.active {
+  background-color: var(--text-primary);
+  transform: scale(1.2);
+}
+
+/* ==========================================
+   Card 2: Calligraphy Card (Organic Blume Cloud)
+   ========================================== */
+.cloud-shape {
+  /* Blob shape from blume brand style reference */
+  border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%;
+  border: 2px solid var(--border-color);
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--bg-paper);
+  padding: 30px;
+}
+
+.calligraphy-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calligraphy-title {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.calligraphy-sub {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: lowercase;
+}
+
+/* ==========================================
+   Card 3: Rings & Quotes Card
+   ========================================== */
+.card-rings {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.rings-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.rings-img {
+  width: 130px;
+  height: auto;
+  opacity: 0.9;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.typewriter-quote {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.quote-top-right {
+  text-align: right;
+  align-self: flex-end;
+}
+
+.quote-bottom-left {
+  text-align: left;
+  align-self: flex-start;
+}
+
+/* ==========================================
+   Card 4: Mood Booster Card
+   ========================================== */
+.card-booster {
+  padding: 28px;
+}
+
+.booster-header {
+  text-align: center;
+  border-bottom: 1.5px dashed var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.booster-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.booster-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.mood-status-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #FAF9F5;
+  border: 1.5px solid var(--border-color);
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.mood-avatar {
+  width: 48px;
+  height: 48px;
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mood-emoji {
+  font-size: 1.6rem;
+  transition: var(--transition-smooth);
+}
+
+.mood-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mood-text {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.mood-subtext {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.gauge-container {
+  width: 100%;
+  height: 10px;
+  background-color: #FAF9F5;
+  border: 1.5px solid var(--border-color);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.gauge-bar {
+  height: 100%;
+  background-color: var(--accent-rose);
+  transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.gauge-bar.unlocked {
+  background-color: var(--accent-green);
+}
+
+.gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.gauge-val {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+/* Vintage Buttons styled as Blume fully rounded shop buttons */
+.vintage-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.vintage-btn {
+  background-color: var(--bg-paper);
+  border: 2px solid var(--border-color);
+  border-radius: 50px; /* Pill buttons */
+  padding: 12px 20px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.vintage-btn:hover {
+  background-color: var(--bg-dark-charcoal);
+  color: #FFFFFF;
+  transform: scale(1.02);
+}
+
+.vintage-btn:active {
+  transform: scale(1);
+}
+
+.vintage-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(28, 26, 23, 0.2);
+}
+
+/* ==========================================
+   Card 5: Secret Envelope Card
+   ========================================== */
+.card-envelope {
+  padding: 28px;
+}
+
+.envelope-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.envelope-header h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.envelope-header p {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.envelope-wrapper {
+  margin: 20px auto 10px auto;
+  perspective: 1000px;
+  cursor: pointer;
+  width: 290px;
+  height: 200px;
+}
+
+.envelope {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #E2DBD2;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 145px solid transparent;
+  border-right: 145px solid transparent;
+  border-top: 100px solid #D6CBBC;
+  transform-origin: top;
+  transition: transform 0.4s ease 0.2s, z-index 0.2s ease 0.2s;
+  z-index: 4;
+}
+
+.pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 145px solid #EAE2D5;
+  border-right: 145px solid #EAE2D5;
+  border-bottom: 100px solid #E1D7C8;
+  border-top: 100px solid transparent;
+  border-radius: 0 0 4px 4px;
+  z-index: 3;
+}
+
+.letter {
+  position: absolute;
+  bottom: 5px;
+  left: 12px;
+  width: 266px;
+  height: 180px;
+  background-color: #FFFDFB;
+  background-image: radial-gradient(#F3EEE5 1px, transparent 1px);
+  background-size: 14px 14px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.4s, z-index 0s linear 0.4s, height 0.6s ease 0.4s;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.letter-content {
+  opacity: 0;
+  transition: opacity 0.4s ease 0.8s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.letter-date {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.letter-salutation {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.letter-body {
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: justify;
+  text-indent: 16px;
+  color: #3C3631;
+}
+
+.letter-signature {
+  font-family: var(--font-letter);
+  font-size: 1.5rem;
+  text-align: right;
+  line-height: 1.1;
+  color: var(--accent-rose);
+  margin-top: 6px;
+}
+
+.letter-signature span {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+/* Opened Envelope Trigger */
+.envelope-wrapper.open .flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+  transition: transform 0.4s ease, z-index 0.2s ease;
+}
+
+.envelope-wrapper.open .letter {
+  transform: translateY(-240px);
+  height: 420px;
+  z-index: 5;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s linear, height 0.6s ease;
+}
+
+.envelope-wrapper.open .letter-content {
+  opacity: 1;
+  transition: opacity 0.4s ease 0.4s;
+}
+
+.envelope-wrapper.open .letter {
+  overflow-y: auto;
+}
+
+/* ==========================================
+   Card 7: Timer Card
+   ========================================== */
+.card-timer {
+  padding: 24px;
+  text-align: center;
+}
+
+.timer-title-meta {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.timer-count-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.timer-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 48px;
+}
+
+.timer-block .val {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.timer-block .lbl {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.timer-count-display .sep {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: #D1C9BE;
+  margin-bottom: 14px;
+}
+
+.timer-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.vintage-timer-btn {
+  background: none;
+  border: 1.5px solid var(--border-color);
+  background-color: #FAF8F5;
+  border-radius: 30px; /* Rounded pill button */
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-smooth);
+}
+
+.vintage-timer-btn:hover {
+  color: var(--text-primary);
+  background-color: #FFFFFF;
+  transform: scale(1.02);
+}
+
+.timer-date-input-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.v-date-input {
+  padding: 5px 10px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  background-color: #FAF8F5;
+  color: var(--text-primary);
+}
+
+.v-date-input:focus {
+  outline: none;
+  border-color: var(--accent-green);
+}
+
+.v-save-btn {
+  background-color: var(--bg-dark-charcoal);
+  color: #FFFFFF;
+  border: 1.5px solid var(--border-color);
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.v-save-btn:hover {
+  background-color: #FFFFFF;
+  color: var(--text-primary);
+}
+
+/* ==========================================
+   Footer
+   ========================================== */
+.vintage-footer {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #8E8984;
+  border-top: 1.5px dashed rgba(28,26,23,0.1);
+  padding-top: 24px;
+  margin-top: 10px;
+  letter-spacing: 0.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vintage-footer .copy {
+  opacity: 0.65;
+  font-size: 0.62rem;
+}
+
+/* ==========================================
+   Intro Welcome Overlay (Autoplay Bypass)
+   ========================================== */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #FAF8F2;
+  background-image: linear-gradient(rgba(245, 247, 242, 0.6), rgba(245, 247, 242, 0.6)), url('assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 20px;
+}
+
+.intro-card {
+  position: relative;
+  background-color: var(--bg-paper);
+  border: 2px solid var(--border-color);
+  box-shadow: 0 12px 36px rgba(28,26,23,0.08);
+  padding: 44px 30px;
+  width: 100%;
+  max-width: 340px;
+  border-radius: 28px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.intro-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 10;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.intro-card-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.intro-title {
+  font-family: var(--font-heading);
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.intro-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  letter-spacing: 1.5px;
+}
+
+.intro-divider {
+  width: 80px;
+  height: 2px;
+  background-color: var(--border-color);
+  margin: 8px 0;
+}
+
+.intro-btn {
+  background-color: var(--bg-paper);
+  border: 2px solid var(--border-color);
+  border-radius: 50px; /* Pill button */
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.intro-btn:hover {
+  background-color: var(--bg-dark-charcoal);
+  color: #FFFFFF;
+  transform: scale(1.02);
+}
+
+.intro-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(28, 26, 23, 0.25);
+}
+
+/* ==========================================
+   Responsive Adaptations
+   ========================================== */
+@media (max-width: 480px) {
+  .app-container {
+    max-width: 100%;
+    padding: 10px;
+  }
+  
+  .blume-card {
+    padding: 18px;
+    border-radius: 24px;
+  }
+  
+  .calligraphy-title {
+    font-size: 1.8rem;
+  }
+  
+  .envelope-wrapper {
+    width: 250px;
+    height: 172px;
+  }
+  
+  .flap {
+    border-left-width: 125px;
+    border-right-width: 125px;
+    border-top-width: 86px;
+  }
+  
+  .pocket {
+    border-left-width: 125px;
+    border-right-width: 125px;
+    border-bottom-width: 86px;
+    border-top-width: 86px;
+  }
+  
+  .letter {
+    width: 230px;
+    height: 154px;
+    left: 10px;
+  }
+  
+  .envelope-wrapper.open .letter {
+    transform: translateY(-210px);
+    height: 380px;
+  }
+}
+
+/* Reduced Motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .blume-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .envelope-wrapper.open .letter {
+    transition: none;
+  }
+  
+  .slider-img {
+    transition: none;
+  }
+}
+
+/* ==========================================
+   Question & Runaway Button Section
+   ========================================== */
+.question-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1.5px dashed var(--border-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.question-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.question-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  min-height: 50px;
+  align-items: center;
+}
+
+.question-btn {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: 2px solid var(--border-color);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-yes {
+  background-color: var(--accent-green);
+  color: #FFFFFF;
+}
+
+.btn-yes:hover {
+  background-color: #4c7d64;
+  transform: scale(1.05);
+}
+
+.btn-no {
+  background-color: var(--accent-rose);
+  color: #FFFFFF;
+  position: relative;
+  z-index: 999;
+  /* Avoid transition on top/left to make teleportation instant and uncatchable */
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* ==========================================
+   Declaration of Love Card & Spawning Texts
+   ========================================== */
+.card-love {
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.love-header {
+  margin-bottom: 24px;
+}
+
+.love-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.love-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.love-action-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.love-btn-main {
+  background-color: var(--accent-rose);
+  color: #FFFFFF;
+  border: 2px solid var(--border-color);
+  border-radius: 50px; /* Pill button */
+  padding: 16px 36px;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-flat);
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.love-btn-main:hover {
+  background-color: var(--bg-dark-charcoal);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.love-btn-main:active {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 0px #1C1A17;
+}
+
+.love-btn-main:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 140, 140, 0.4);
+}
+
+/* Floating Love Text Overlay Container */
+#loveTextContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.floating-love-text {
+  position: absolute;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  transform-origin: center;
+  user-select: none;
+  /* Thick playful outline or soft shadow matching the blume style */
+  text-shadow: 2px 2px 0px #FAF8F2, -2px -2px 0px #FAF8F2, 2px -2px 0px #FAF8F2, -2px 2px 0px #FAF8F2;
+  animation: floatUp ease-in forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10vh) rotate(var(--rot-start, -10deg)) scale(0.6);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rot-start, -10deg)) scale(1.1);
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-110vh) rotate(var(--rot-end, 15deg)) scale(0.9);
+  }
+}
+
